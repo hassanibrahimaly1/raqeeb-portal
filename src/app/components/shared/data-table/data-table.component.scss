@@ -1,0 +1,76 @@
+.rq-table-container {
+    width: 100%;
+    background-color: var(--rq-card-bg);
+    border: 1px solid var(--rq-border);
+    border-radius: var(--rq-radius-lg);
+    overflow: hidden;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05);
+
+    .rq-table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: inherit;
+
+        thead {
+            background-color: var(--rq-bg);
+            border-bottom: 1px solid var(--rq-border);
+
+            th {
+                padding: 12px 16px;
+                font-size: 12px;
+                font-weight: 700;
+                text-transform: uppercase;
+                color: var(--rq-text-muted);
+                letter-spacing: 0.5px;
+                white-space: nowrap;
+            }
+        }
+
+        tbody {
+            tr {
+                border-bottom: 1px solid var(--rq-border);
+                transition: background-color 0.2s;
+
+                &:last-child {
+                    border-bottom: none;
+                }
+
+                &:hover {
+                    background-color: var(--rq-bg);
+                }
+
+                td {
+                    padding: 14px 16px;
+                    font-size: 14px;
+                    color: var(--rq-text-main);
+                    vertical-align: middle;
+                }
+            }
+        }
+    }
+
+    .empty-state {
+        color: var(--rq-text-muted);
+        font-size: 14px;
+        padding: 24px;
+    }
+
+    .skeleton-loader {
+        animation: pulse 1.5s infinite;
+        color: var(--rq-text-muted);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.6;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.6;
+    }
+}

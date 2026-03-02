@@ -1,0 +1,75 @@
+// Raqeeb Design System Tokens
+
+:root {
+    // Primary Colors (Enterprise Blue)
+    --rq-primary: #3E97FF;
+    --rq-primary-hover: #2b82eb;
+    --rq-primary-light: #E1F0FF;
+
+    // Neutral Colors (Slate/Grey)
+    --rq-bg: #F9FAFB;
+    --rq-card-bg: #FFFFFF;
+    --rq-text-main: #181C32;
+    --rq-text-muted: #7E8299;
+    --rq-text-inverse: #FFFFFF;
+    --rq-border: #EFF2F5;
+    --rq-border-hover: #E1E3EA;
+
+    // Status Colors
+    --rq-success: #50CD89;
+    --rq-danger: #F1416C;
+    --rq-warning: #FFC700;
+    --rq-info: #7239EA;
+
+    // Spacing
+    --rq-spacing-xs: 4px;
+    --rq-spacing-sm: 8px;
+    --rq-spacing-md: 16px;
+    --rq-spacing-lg: 24px;
+    --rq-spacing-xl: 32px;
+
+    // Border Radius
+    --rq-radius-sm: 4px;
+    --rq-radius-md: 8px;
+    --rq-radius-lg: 12px;
+
+    // Typography
+    --rq-font-family: 'Inter', 'Outfit', 'IBM Plex Sans Arabic', sans-serif;
+}
+
+// Global Reset & Base
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: var(--rq-font-family);
+    background-color: var(--rq-bg);
+    color: var(--rq-text-main);
+    -webkit-font-smoothing: antialiased;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+// RTL Helper Classes (using logical properties)
+[dir="rtl"] {
+    text-align: right;
+}
+
+.m-start {
+    margin-inline-start: var(--rq-spacing-md);
+}
+
+.p-start {
+    padding-inline-start: var(--rq-spacing-md);
+}
+
+.m-end {
+    margin-inline-end: var(--rq-spacing-md);
+}
+
+.p-end {
+    padding-inline-end: var(--rq-spacing-md);
+}

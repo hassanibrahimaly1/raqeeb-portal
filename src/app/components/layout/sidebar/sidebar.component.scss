@@ -1,0 +1,102 @@
+.rq-sidebar {
+    width: 260px;
+    height: 100vh;
+    background-color: var(--rq-card-bg);
+    border-inline-end: 1px solid var(--rq-border);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    inset-inline-start: 0;
+    top: 0;
+    z-index: 1000;
+    transition: all 0.3s ease;
+
+    .sidebar-header {
+        height: 70px;
+        display: flex;
+        align-items: center;
+        padding: 0 var(--rq-spacing-lg);
+
+        .logo {
+            display: flex;
+            align-items: baseline;
+            font-weight: 800;
+            font-size: 22px;
+            letter-spacing: 1px;
+            color: var(--rq-text-main);
+
+            .logo-dot {
+                color: var(--rq-primary);
+                font-size: 28px;
+            }
+        }
+    }
+
+    .sidebar-nav {
+        flex: 1;
+        padding: var(--rq-spacing-md);
+        overflow-y: auto;
+
+        .nav-group {
+            margin-bottom: var(--rq-spacing-xl);
+
+            .nav-label {
+                font-size: 11px;
+                font-weight: 700;
+                text-transform: uppercase;
+                color: var(--rq-text-muted);
+                letter-spacing: 1px;
+                padding-inline-start: var(--rq-spacing-md);
+                margin-bottom: var(--rq-spacing-sm);
+                display: block;
+            }
+        }
+    }
+
+    .nav-item {
+        display: flex;
+        align-items: center;
+        padding: 12px var(--rq-spacing-md);
+        color: var(--rq-text-muted);
+        text-decoration: none;
+        border-radius: var(--rq-radius-md);
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.2s;
+        margin-bottom: 2px;
+        gap: 12px;
+
+        i {
+            width: 20px;
+            font-size: 18px;
+        }
+
+        &:hover {
+            background-color: var(--rq-bg);
+            color: var(--rq-primary);
+        }
+
+        &.active {
+            background-color: var(--rq-primary-light);
+            color: var(--rq-primary);
+            font-weight: 600;
+        }
+
+        .badge {
+            margin-inline-start: auto;
+            padding: 2px 8px;
+            font-size: 11px;
+            border-radius: 20px;
+
+            &-danger {
+                background-color: var(--rq-danger);
+                color: white;
+            }
+        }
+    }
+
+    .sidebar-footer {
+        padding: var(--rq-spacing-md);
+        border-top: 1px solid var(--rq-border);
+    }
+}

@@ -1,0 +1,75 @@
+.rq-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: var(--rq-radius-sm);
+    white-space: nowrap;
+
+    &.is-pill {
+        border-radius: 20px;
+    }
+
+    &.size-sm {
+        padding: 2px 8px;
+        font-size: 11px;
+    }
+
+    // Success
+    &.badge-success {
+        background-color: var(--rq-success);
+        color: white;
+
+        &.is-light {
+            background-color: #E8FFF3;
+            color: var(--rq-success);
+        }
+    }
+
+    // Danger
+    &.badge-danger {
+        background-color: var(--rq-danger);
+        color: white;
+
+        &.is-light {
+            background-color: #FFF5F8;
+            color: var(--rq-danger);
+        }
+    }
+
+    // Warning
+    &.badge-warning {
+        background-color: var(--rq-warning);
+        color: #472d00;
+
+        &.is-light {
+            background-color: #FFF8DD;
+            color: #926d00;
+        }
+    }
+
+    // Info / Primary
+    &.badge-info,
+    &.badge-primary {
+        background-color: var(--rq-primary);
+        color: white;
+
+        &.is-light {
+            background-color: var(--rq-primary-light);
+            color: var(--rq-primary);
+        }
+    }
+
+    // Secondary
+    &.badge-secondary {
+        background-color: #E1E3EA;
+        color: var(--rq-text-muted);
+
+        &.is-light {
+            background-color: var(--rq-bg);
+            color: var(--rq-text-muted);
+        }
+    }
+}

@@ -1,0 +1,41 @@
+<div class="rq-table-container">
+    <table class="rq-table">
+        <thead>
+            <tr>
+                @for (col of columns; track col.key) {
+                <th>{{ col.label }}</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @if (isLoading) {
+            <tr>
+                <td [attr.colspan]="columns.length" class="text-center py-5">
+                    <div class="skeleton-loader">جارٍ التحميل...</div>
+                </td>
+            </tr>
+            } @else if (data.length === 0) {
+            <tr>
+                <td [attr.colspan]="columns.length" class="text-center py-5">
+                    <div class="empty-state">لا توجد بيانات لعرضها</div>
+                </td>
+            </tr>
+            } @else {
+            @for (row of data; track row) {
+            <tr>
+                @for (col of columns; track col.key) {
+                <td>
+                    @if (customTemplates[col.key]) {
+                    <ng-container
+                        *ngTemplateOutlet="customTemplates[col.key]; context: { $implicit: row[col.key], row: row }"></ng-container>
+                    } @else {
+                    {{ row[col.key] }}
+                    }
+                </td>
+                }
+            </tr>
+            }
+            }
+        </tbody>
+    </table>
+</div>

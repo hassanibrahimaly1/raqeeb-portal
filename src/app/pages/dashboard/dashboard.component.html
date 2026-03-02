@@ -1,0 +1,113 @@
+<div class="dashboard">
+
+    <!-- Header -->
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">لوحة التحكم</h1>
+            <p class="page-sub">{{ today }}</p>
+        </div>
+        <div class="header-actions">
+            <button class="btn-outline-sm"><i class="fa-solid fa-download"></i> تصدير التقرير</button>
+        </div>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="kpi-grid">
+        @for (kpi of kpis; track kpi.label) {
+        <div class="kpi-card" [class]="'kpi-' + kpi.variant">
+            <div class="kpi-icon">
+                <i [class]="kpi.icon"></i>
+            </div>
+            <div class="kpi-body">
+                <div class="kpi-value">{{ kpi.value }}</div>
+                <div class="kpi-label">{{ kpi.label }}</div>
+                <div class="kpi-sub">{{ kpi.sub }}</div>
+            </div>
+        </div>
+        }
+    </div>
+
+    <!-- Two-column section -->
+    <div class="main-grid">
+
+        <!-- Review Queue -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title"><i class="fa-solid fa-clipboard-list"></i> قائمة المراجعة</h2>
+                <a class="card-link" routerLink="/calls">عرض الكل</a>
+            </div>
+            <div class="card-body p-0">
+                <table class="rq-mini-table">
+                    <thead>
+                        <tr>
+                            <th>الموظف</th>
+                            <th>المدة</th>
+                            <th>التوقيت</th>
+                            <th>الأداء</th>
+                            <th>علامة</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (call of reviewQueue; track call.agent) {
+                        <tr>
+                            <td>
+                                <div class="agent-cell">
+                                    <div class="agent-avatar">{{ call.agent[0] }}</div>
+                                    <div>
+                                        <div class="agent-name">{{ call.agent }}</div>
+                                        <div class="agent-num">{{ call.number }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="mono">{{ call.duration }}</td>
+                            <td class="text-muted">{{ call.time }}</td>
+                            <td>
+                                <span class="score-badge" [class]="scoreClass(call.score)">{{ call.score }}</span>
+                            </td>
+                            <td>
+                                @if (call.flag) {
+                                <span class="flag" [class.flag-danger]="call.flag === 'خطر'"
+                                    [class.flag-opp]="call.flag === 'فرصة'">
+                                    {{ call.flag }}
+                                </span>
+                                }
+                            </td>
+                            <td>
+                                <button class="icon-btn"><i class="fa-solid fa-play"></i></button>
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Active Alerts -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title"><i class="fa-solid fa-bell-exclamation"></i> التنبيهات النشطة</h2>
+                <a class="card-link" routerLink="/alerts">إدارة التنبيهات</a>
+            </div>
+            <div class="card-body">
+                <div class="alerts-list">
+                    @for (alert of alerts; track alert.device) {
+                    <div class="alert-item" [class]="'alert-' + alert.severity">
+                        <div class="alert-icon">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                        </div>
+                        <div class="alert-content">
+                            <div class="alert-device">{{ alert.device }}</div>
+                            <div class="alert-msg">{{ alert.message }}</div>
+                            <div class="alert-time">{{ alert.time }}</div>
+                        </div>
+                        <button class="ack-btn">تم</button>
+                    </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>

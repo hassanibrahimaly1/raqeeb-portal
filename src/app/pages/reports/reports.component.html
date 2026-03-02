@@ -1,0 +1,127 @@
+<div class="reports-page">
+
+    <!-- Header -->
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">التقارير اليومية</h1>
+            <p class="page-sub">ملخص يومي مُولَّد بالذكاء الاصطناعي</p>
+        </div>
+    </div>
+
+    <div class="reports-layout">
+
+        <!-- Report List (left/start column) -->
+        <div class="report-list">
+            @for (r of reports; track r.id) {
+            <div class="report-item" [class.active]="selectedReport?.id === r.id" (click)="selectReport(r)">
+                <div class="report-date">{{ r.dateAr }}</div>
+                <div class="report-meta">
+                    <span class="meta-chip"><i class="fa-solid fa-phone"></i> {{ r.totalCalls }} مكالمة</span>
+                    <span class="meta-chip" [class.chip-warn]="r.alerts > 0"><i class="fa-solid fa-bell"></i> {{
+                        r.alerts }} تنبيه</span>
+                </div>
+                <div class="report-score-row">
+                    <span class="avg-label">متوسط الأداء</span>
+                    <span class="avg-score" [class]="scoreClass(r.avgScore)">{{ r.avgScore }}</span>
+                </div>
+            </div>
+            }
+        </div>
+
+        <!-- Report Detail (right/end column) -->
+        @if (selectedReport) {
+        <div class="report-detail">
+
+            <!-- Detail Header -->
+            <div class="detail-header">
+                <div class="detail-title-row">
+                    <i class="fa-solid fa-file-chart-column"></i>
+                    <div>
+                        <h2 class="detail-title">التقرير اليومي</h2>
+                        <p class="detail-sub">{{ selectedReport.dateAr }}</p>
+                    </div>
+                </div>
+                <button class="export-btn"><i class="fa-solid fa-download"></i> تصدير</button>
+            </div>
+
+            <!-- KPI Strip -->
+            <div class="kpi-strip">
+                <div class="kpi-chip">
+                    <div class="kpi-val">{{ selectedReport.totalCalls }}</div>
+                    <div class="kpi-lbl">إجمالي المكالمات</div>
+                </div>
+                <div class="kpi-chip">
+                    <div class="kpi-val">{{ selectedReport.recorded }}</div>
+                    <div class="kpi-lbl">مسجّلة</div>
+                </div>
+                <div class="kpi-chip">
+                    <div class="kpi-val">{{ selectedReport.aiReady }}</div>
+                    <div class="kpi-lbl">تحليل جاهز</div>
+                </div>
+                <div class="kpi-chip" [class]="'kpi-score-' + scoreClass(selectedReport.avgScore)">
+                    <div class="kpi-val">{{ selectedReport.avgScore }}</div>
+                    <div class="kpi-lbl">متوسط الأداء</div>
+                </div>
+                <div class="kpi-chip">
+                    <div class="kpi-val">{{ selectedReport.reviewQueue }}</div>
+                    <div class="kpi-lbl">تحتاج مراجعة</div>
+                </div>
+                @for (f of selectedReport.topFlags; track f.label) {
+                <div class="kpi-chip" [class.kpi-danger]="f.type === 'danger'"
+                    [class.kpi-success]="f.type === 'success'">
+                    <div class="kpi-val">{{ f.count }}</div>
+                    <div class="kpi-lbl">{{ f.label }}</div>
+                </div>
+                }
+            </div>
+
+            <!-- Highlights -->
+            <div class="section">
+                <div class="section-title"><i class="fa-solid fa-sparkles"></i> أبرز ما حدث اليوم</div>
+                <ul class="highlights-list">
+                    @for (h of selectedReport.highlights; track h) {
+                    <li>{{ h }}</li>
+                    }
+                </ul>
+            </div>
+
+            <!-- Agent Performance -->
+            <div class="two-col">
+                <div class="section">
+                    <div class="section-title"><i class="fa-solid fa-trophy" style="color: #ffc700"></i> الأفضل أداءً
+                    </div>
+                    <div class="agents-list">
+                        @for (a of selectedReport.topAgents; track a.name) {
+                        <div class="agent-row">
+                            <div class="agent-avatar">{{ a.name[0] }}</div>
+                            <div class="agent-name">{{ a.name }}</div>
+                            <div class="agent-score" [class]="scoreClass(a.score)">{{ a.score }}</div>
+                        </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title"><i class="fa-solid fa-circle-exclamation"
+                            style="color: var(--rq-danger)"></i> يحتاجون متابعة</div>
+                    <div class="agents-list">
+                        @for (a of selectedReport.lowAgents; track a.name) {
+                        <div class="agent-row agent-row-col">
+                            <div style="display:flex; align-items:center; gap:8px">
+                                <div class="agent-avatar av-danger">{{ a.name[0] }}</div>
+                                <div class="agent-name">{{ a.name }}</div>
+                                <div class="agent-score bad">{{ a.score }}</div>
+                            </div>
+                            <div class="agent-reason">{{ a.reason }}</div>
+                        </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        }
+
+    </div>
+
+</div>

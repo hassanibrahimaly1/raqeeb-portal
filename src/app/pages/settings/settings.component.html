@@ -1,0 +1,184 @@
+<div class="settings-page">
+
+    <!-- Header -->
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">الإعدادات</h1>
+            <p class="page-sub">تخصيص بيئة العمل والسياسات</p>
+        </div>
+        @if (saved) {
+        <div class="save-toast"><i class="fa-solid fa-circle-check"></i> تم الحفظ بنجاح</div>
+        }
+    </div>
+
+    <div class="settings-layout">
+
+        <!-- Tabs Sidebar -->
+        <div class="tabs-nav">
+            <button [class.active]="activeTab === 'company'" (click)="activeTab = 'company'">
+                <i class="fa-solid fa-building"></i> معلومات الشركة
+            </button>
+            <button [class.active]="activeTab === 'notifications'" (click)="activeTab = 'notifications'">
+                <i class="fa-solid fa-bell"></i> الإشعارات
+            </button>
+            <button [class.active]="activeTab === 'recording'" (click)="activeTab = 'recording'">
+                <i class="fa-solid fa-microphone"></i> سياسة التسجيل
+            </button>
+            <button [class.active]="activeTab === 'integrations'" (click)="activeTab = 'integrations'">
+                <i class="fa-solid fa-plug"></i> التكاملات
+            </button>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="tab-content">
+
+            <!-- Company -->
+            @if (activeTab === 'company') {
+            <div class="section-card">
+                <div class="sc-title">معلومات الشركة</div>
+                <div class="fields-grid">
+                    <div class="field">
+                        <label>اسم الشركة</label>
+                        <input class="rq-field" type="text" [(ngModel)]="companyName">
+                    </div>
+                    <div class="field">
+                        <label>رقم الهاتف</label>
+                        <input class="rq-field" type="text" [(ngModel)]="companyPhone">
+                    </div>
+                    <div class="field">
+                        <label>المنطقة الزمنية</label>
+                        <select class="rq-field" [(ngModel)]="timezone">
+                            <option value="Asia/Amman">Asia/Amman (GMT+3)</option>
+                            <option value="Asia/Riyadh">Asia/Riyadh (GMT+3)</option>
+                            <option value="Asia/Cairo">Africa/Cairo (GMT+2)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="save-row">
+                    <button class="btn-primary" (click)="save()">حفظ التغييرات</button>
+                </div>
+            </div>
+            }
+
+            <!-- Notifications -->
+            @if (activeTab === 'notifications') {
+            <div class="section-card">
+                <div class="sc-title">قنوات الإشعارات</div>
+                <div class="toggle-list">
+                    <div class="toggle-item">
+                        <div class="ti-info">
+                            <div class="ti-label">إشعارات البريد الإلكتروني</div>
+                            <div class="ti-sub">إرسال التنبيهات الحرجة عبر البريد</div>
+                        </div>
+                        <label class="rq-toggle">
+                            <input type="checkbox" [(ngModel)]="alertEmail">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="toggle-item">
+                        <div class="ti-info">
+                            <div class="ti-label">إشعارات SMS</div>
+                            <div class="ti-sub">رسائل نصية للتنبيهات العاجلة</div>
+                        </div>
+                        <label class="rq-toggle">
+                            <input type="checkbox" [(ngModel)]="alertSms">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="toggle-item">
+                        <div class="ti-info">
+                            <div class="ti-label">التقرير اليومي</div>
+                            <div class="ti-sub">استلام ملخص يومي بالذكاء الاصطناعي</div>
+                        </div>
+                        <label class="rq-toggle">
+                            <input type="checkbox" [(ngModel)]="dailyDigest">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    @if (dailyDigest) {
+                    <div class="field indent">
+                        <label>وقت إرسال التقرير</label>
+                        <input class="rq-field narrow" type="time" [(ngModel)]="digestTime">
+                    </div>
+                    }
+                    <div class="toggle-item">
+                        <div class="ti-info">
+                            <div class="ti-label">التنبيهات الحرجة فقط</div>
+                            <div class="ti-sub">تجاهل تنبيهات التحذير والمعلومات</div>
+                        </div>
+                        <label class="rq-toggle">
+                            <input type="checkbox" [(ngModel)]="criticalOnly">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="save-row"><button class="btn-primary" (click)="save()">حفظ التغييرات</button></div>
+            </div>
+            }
+
+            <!-- Recording Policy -->
+            @if (activeTab === 'recording') {
+            <div class="section-card">
+                <div class="sc-title">سياسة التسجيل والاحتفاظ</div>
+                <div class="toggle-list">
+                    <div class="toggle-item">
+                        <div class="ti-info">
+                            <div class="ti-label">تسجيل جميع المكالمات</div>
+                            <div class="ti-sub">تسجيل تلقائي لجميع المكالمات الواردة والصادرة</div>
+                        </div>
+                        <label class="rq-toggle">
+                            <input type="checkbox" [(ngModel)]="recordAll">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="toggle-item">
+                        <div class="ti-info">
+                            <div class="ti-label">معالجة الذكاء الاصطناعي التلقائية</div>
+                            <div class="ti-sub">تحليل المكالمات فور رفعها</div>
+                        </div>
+                        <label class="rq-toggle">
+                            <input type="checkbox" [(ngModel)]="aiAutoProcess">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="fields-grid">
+                    <div class="field">
+                        <label>الحد الأدنى للمدة (ثانية)</label>
+                        <input class="rq-field" type="number" [(ngModel)]="minDuration" min="0">
+                        <p class="field-hint">مكالمات أقل من هذه المدة لن تُسجَّل</p>
+                    </div>
+                    <div class="field">
+                        <label>مدة الاحتفاظ بالتسجيلات (يوم)</label>
+                        <input class="rq-field" type="number" [(ngModel)]="retentionDays" min="30">
+                        <p class="field-hint">تُحذف التسجيلات تلقائياً بعد هذه المدة</p>
+                    </div>
+                </div>
+                <div class="save-row"><button class="btn-primary" (click)="save()">حفظ التغييرات</button></div>
+            </div>
+            }
+
+            <!-- Integrations -->
+            @if (activeTab === 'integrations') {
+            <div class="section-card">
+                <div class="sc-title">التكاملات</div>
+                <div class="integrations-list">
+                    @for (int of [{name:'Slack', icon:'fa-brands fa-slack', connected:false},{name:'Google Sheets',
+                    icon:'fa-brands fa-google', connected:false},{name:'Zapier', icon:'fa-solid fa-bolt',
+                    connected:false}]; track int.name) {
+                    <div class="int-row">
+                        <div class="int-icon"><i [class]="int.icon"></i></div>
+                        <div class="int-info">
+                            <div class="int-name">{{ int.name }}</div>
+                            <div class="int-sub">{{ int.connected ? 'متصل' : 'غير متصل — قريباً' }}</div>
+                        </div>
+                        <button class="btn-outline-sm" disabled>قريباً</button>
+                    </div>
+                    }
+                </div>
+            </div>
+            }
+
+        </div>
+    </div>
+</div>

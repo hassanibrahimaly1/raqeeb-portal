@@ -1,0 +1,62 @@
+<aside class="rq-sidebar">
+    <div class="sidebar-header">
+        <div class="logo">
+            <span class="logo-text">RAQEEB</span>
+            <span class="logo-dot">.</span>
+        </div>
+    </div>
+
+    <nav class="sidebar-nav">
+        <div class="nav-group">
+            <span class="nav-label">الرئيسية</span>
+            <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
+                <i class="fa-solid fa-grid-2"></i>
+                <span>لوحة التحكم</span>
+            </a>
+        </div>
+
+        <div class="nav-group">
+            <span class="nav-label">الذكاء الاصطناعي</span>
+            <a routerLink="/calls" routerLinkActive="active" class="nav-item">
+                <i class="fa-solid fa-phone-volume"></i>
+                <span>المكالمات</span>
+            </a>
+            <a routerLink="/reports" routerLinkActive="active" class="nav-item">
+                <i class="fa-solid fa-chart-user"></i>
+                <span>التقارير اليومية</span>
+            </a>
+        </div>
+
+        <div class="nav-group">
+            <span class="nav-label">المراقبة</span>
+            <a routerLink="/location" routerLinkActive="active" class="nav-item">
+                <i class="fa-solid fa-location-dot"></i>
+                <span>الموقع المباشر</span>
+            </a>
+            <a routerLink="/alerts" routerLinkActive="active" class="nav-item">
+                <i class="fa-solid fa-bell-exclamation"></i>
+                <span>التنبيهات</span>
+                <span class="badge badge-danger">3</span>
+            </a>
+        </div>
+
+        <div class="nav-group">
+            <span class="nav-label">الإدارة</span>
+            <a routerLink="/devices" routerLinkActive="active" class="nav-item">
+                <i class="fa-solid fa-mobile-screen"></i>
+                <span>الأجهزة</span>
+            </a>
+            <a routerLink="/users" routerLinkActive="active" class="nav-item">
+                <i class="fa-solid fa-users-gear"></i>
+                <span>المستخدمين</span>
+            </a>
+        </div>
+    </nav>
+
+    <div class="sidebar-footer">
+        <a routerLink="/settings" class="nav-item">
+            <i class="fa-solid fa-cog"></i>
+            <span>الإعدادات</span>
+        </a>
+    </div>
+</aside>

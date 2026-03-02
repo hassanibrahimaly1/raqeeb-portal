@@ -1,0 +1,93 @@
+<div class="alerts-page">
+
+    <!-- Header -->
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">
+                التنبيهات
+                @if (unackedCount > 0) {
+                <span class="header-badge">{{ unackedCount }}</span>
+                }
+            </h1>
+            <p class="page-sub">مراقبة الامتثال وصحة الأجهزة</p>
+        </div>
+        @if (unackedCount > 0) {
+        <button class="ack-all-btn" (click)="acknowledgeAll()">
+            <i class="fa-solid fa-check-double"></i> تأكيد الكل
+        </button>
+        }
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-bar">
+        <div class="filter-group">
+            <label>الخطورة</label>
+            <div class="seg-group">
+                <button [class.active]="filterSeverity === ''" (click)="filterSeverity = ''">الكل</button>
+                <button [class.active]="filterSeverity === 'critical'"
+                    (click)="filterSeverity = 'critical'">حرجة</button>
+                <button [class.active]="filterSeverity === 'warning'"
+                    (click)="filterSeverity = 'warning'">تحذير</button>
+                <button [class.active]="filterSeverity === 'info'" (click)="filterSeverity = 'info'">معلومة</button>
+            </div>
+        </div>
+        <div class="filter-group">
+            <label>الحالة</label>
+            <div class="seg-group">
+                <button [class.active]="filterAcked === 'unacked'" (click)="filterAcked = 'unacked'">غير مؤكدة</button>
+                <button [class.active]="filterAcked === 'acked'" (click)="filterAcked = 'acked'">مؤكدة</button>
+                <button [class.active]="filterAcked === ''" (click)="filterAcked = ''">الكل</button>
+            </div>
+        </div>
+        <div class="count-chip">{{ filtered.length }} تنبيه</div>
+    </div>
+
+    <!-- Alerts List -->
+    <div class="alerts-list">
+        @for (alert of filtered; track alert.id) {
+        <div class="alert-row" [class]="'sev-' + alert.severity" [class.acked]="alert.acked">
+
+            <!-- Icon -->
+            <div class="alert-icon-wrap">
+                <i [class]="typeIcon(alert.type)"></i>
+            </div>
+
+            <!-- Content -->
+            <div class="alert-body">
+                <div class="alert-top-row">
+                    <span class="alert-type-label">{{ typeLabel(alert.type) }}</span>
+                    <span class="sev-badge" [class]="'sev-badge-' + alert.severity">
+                        {{ alert.severity === 'critical' ? 'حرجة' : alert.severity === 'warning' ? 'تحذير' : 'معلومة' }}
+                    </span>
+                </div>
+                <div class="alert-message">{{ alert.message }}</div>
+                <div class="alert-meta">
+                    <span><i class="fa-solid fa-mobile-screen"></i> {{ alert.device }}</span>
+                    <span><i class="fa-solid fa-user"></i> {{ alert.agent }}</span>
+                    <span><i class="fa-regular fa-clock"></i> {{ alert.time }}</span>
+                </div>
+            </div>
+
+            <!-- Action -->
+            <div class="alert-action">
+                @if (!alert.acked) {
+                <button class="ack-btn" (click)="acknowledge(alert)">
+                    <i class="fa-solid fa-check"></i> تأكيد
+                </button>
+                } @else {
+                <span class="acked-label"><i class="fa-solid fa-circle-check"></i> تم</span>
+                }
+            </div>
+
+        </div>
+        }
+
+        @empty {
+        <div class="empty-state">
+            <i class="fa-solid fa-bell-slash"></i>
+            <p>لا توجد تنبيهات تطابق الفلتر المحدد</p>
+        </div>
+        }
+    </div>
+
+</div>

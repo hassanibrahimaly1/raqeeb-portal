@@ -1,0 +1,29 @@
+.rq-app-wrapper {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+
+    .rq-main-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        margin-inline-start: 260px; // Matches sidebar width
+        min-width: 0; // Prevent flex item from overflowing
+        transition: all 0.3s ease;
+
+        .content-body {
+            flex: 1;
+            padding: var(--rq-spacing-xl);
+            background-color: var(--rq-bg);
+        }
+    }
+}
+
+// Mobile responsiveness
+@media (max-width: 992px) {
+    .rq-app-wrapper {
+        .rq-main-content {
+            margin-inline-start: 0;
+        }
+    }
+}

@@ -1,0 +1,214 @@
+<div class="devices-page">
+
+    <!-- Header -->
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">الأجهزة</h1>
+            <p class="page-sub">إدارة الأجهزة المسجّلة وصحتها</p>
+        </div>
+        <button class="enroll-btn" (click)="showEnrollModal = true">
+            <i class="fa-solid fa-plus"></i> تسجيل جهاز جديد
+        </button>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-bar">
+        <div class="search-wrap">
+            <i class="fa-solid fa-search"></i>
+            <input class="rq-input" type="text" [(ngModel)]="searchText"
+                placeholder="بحث بالجهاز، الموظف، أو الطراز...">
+        </div>
+        <div class="seg-group">
+            <button [class.active]="filterStatus === ''" (click)="filterStatus = ''">الكل</button>
+            <button [class.active]="filterStatus === 'healthy'" (click)="filterStatus = 'healthy'">سليم</button>
+            <button [class.active]="filterStatus === 'warning'" (click)="filterStatus = 'warning'">تحذير</button>
+            <button [class.active]="filterStatus === 'critical'" (click)="filterStatus = 'critical'">حرج</button>
+            <button [class.active]="filterStatus === 'offline'" (click)="filterStatus = 'offline'">غير متصل</button>
+        </div>
+        <div class="count-chip">{{ filtered.length }} جهاز</div>
+    </div>
+
+    <!-- Devices Grid -->
+    <div class="devices-grid">
+        @for (device of filtered; track device.id) {
+        <div class="device-card" [class]="'st-' + device.status" (click)="openDetail(device)">
+
+            <div class="card-header">
+                <div class="device-icon">
+                    <i class="fa-solid fa-mobile-screen"></i>
+                </div>
+                <span class="status-badge" [class]="'sb-' + device.status">{{ statusLabel(device.status) }}</span>
+            </div>
+
+            <div class="device-name">{{ device.name }}</div>
+            <div class="device-agent"><i class="fa-solid fa-user"></i> {{ device.agent }}</div>
+            <div class="device-model">{{ device.model }}</div>
+
+            <div class="device-stats">
+                <!-- Battery -->
+                <div class="stat" [class]="batteryClass(device.battery)">
+                    <i class="fa-solid" [class]="batteryIcon(device.battery)"></i>
+                    {{ device.battery }}%
+                </div>
+                <!-- Recording -->
+                <div class="stat" [class.stat-ok]="device.recording" [class.stat-err]="!device.recording">
+                    <i class="fa-solid" [class.fa-microphone]="device.recording"
+                        [class.fa-microphone-slash]="!device.recording"></i>
+                    {{ device.recording ? 'مسجّل' : 'معطل' }}
+                </div>
+                <!-- Upload -->
+                <div class="stat" [class.stat-ok]="device.uploadOk" [class.stat-err]="!device.uploadOk">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    {{ device.uploadOk ? 'رفع ✓' : 'فشل' }}
+                </div>
+            </div>
+
+            <div class="device-footer">
+                <span class="last-seen"><i class="fa-regular fa-clock"></i> {{ device.lastSeen }}</span>
+                <span class="calls-count"><i class="fa-solid fa-phone"></i> {{ device.callsToday }} اليوم</span>
+            </div>
+
+        </div>
+        }
+
+        @empty {
+        <div class="empty-state">
+            <i class="fa-solid fa-mobile"></i>
+            <p>لا توجد أجهزة تطابق البحث</p>
+        </div>
+        }
+    </div>
+
+</div>
+
+<!-- Device Detail Panel -->
+@if (selectedDevice) {
+<div class="detail-backdrop" (click)="closeDetail()">
+    <div class="detail-panel" (click)="$event.stopPropagation()">
+        <div class="panel-header">
+            <div>
+                <h2 class="panel-title">{{ selectedDevice.name }}</h2>
+                <p class="panel-sub">{{ selectedDevice.model }} · {{ selectedDevice.os }}</p>
+            </div>
+            <button class="close-btn" (click)="closeDetail()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <div class="panel-body">
+
+            <!-- Status Banner -->
+            <div class="status-banner" [class]="'banner-' + selectedDevice.status">
+                <i class="fa-solid fa-shield-check"></i>
+                <span>صحة الجهاز: <strong>{{ statusLabel(selectedDevice.status) }}</strong></span>
+            </div>
+
+            <!-- Meta Grid -->
+            <div class="meta-grid">
+                <div class="meta-item">
+                    <div class="ml">الموظف</div>
+                    <div class="mv">{{ selectedDevice.agent }}</div>
+                </div>
+                <div class="meta-item">
+                    <div class="ml">كود التسجيل</div>
+                    <div class="mv mono">{{ selectedDevice.enrollCode }}</div>
+                </div>
+                <div class="meta-item">
+                    <div class="ml">تاريخ التسجيل</div>
+                    <div class="mv">{{ selectedDevice.enrolled }}</div>
+                </div>
+                <div class="meta-item">
+                    <div class="ml">آخر ظهور</div>
+                    <div class="mv">{{ selectedDevice.lastSeen }}</div>
+                </div>
+                <div class="meta-item">
+                    <div class="ml">مكالمات اليوم</div>
+                    <div class="mv">{{ selectedDevice.callsToday }}</div>
+                </div>
+                <div class="meta-item">
+                    <div class="ml">البطارية</div>
+                    <div class="mv" [class]="batteryClass(selectedDevice.battery)">{{ selectedDevice.battery }}%</div>
+                </div>
+            </div>
+
+            <!-- Health Checks -->
+            <div class="section-title">فحص الصحة</div>
+            <div class="health-list">
+                <div class="health-item" [class.ok]="selectedDevice.recording" [class.err]="!selectedDevice.recording">
+                    <i class="fa-solid" [class.fa-circle-check]="selectedDevice.recording"
+                        [class.fa-circle-xmark]="!selectedDevice.recording"></i>
+                    <div>
+                        <div class="hi-label">تسجيل المكالمات</div>
+                        <div class="hi-sub">{{ selectedDevice.recording ? 'مفعّل وتعمل بشكل صحيح' : 'معطل — يجب إعادة
+                            التفعيل' }}</div>
+                    </div>
+                </div>
+                <div class="health-item" [class.ok]="selectedDevice.uploadOk" [class.err]="!selectedDevice.uploadOk">
+                    <i class="fa-solid" [class.fa-circle-check]="selectedDevice.uploadOk"
+                        [class.fa-circle-xmark]="!selectedDevice.uploadOk"></i>
+                    <div>
+                        <div class="hi-label">رفع التسجيلات</div>
+                        <div class="hi-sub">{{ selectedDevice.uploadOk ? 'يرفع بشكل طبيعي' : 'فشل في الرفع — تحقق من
+                            الاتصال' }}</div>
+                    </div>
+                </div>
+                <div class="health-item" [class.ok]="selectedDevice.permissions.mic"
+                    [class.err]="!selectedDevice.permissions.mic">
+                    <i class="fa-solid" [class.fa-circle-check]="selectedDevice.permissions.mic"
+                        [class.fa-circle-xmark]="!selectedDevice.permissions.mic"></i>
+                    <div>
+                        <div class="hi-label">صلاحية الميكروفون</div>
+                        <div class="hi-sub">{{ selectedDevice.permissions.mic ? 'ممنوحة' : 'مسحوبة — تحتاج إعادة منح' }}
+                        </div>
+                    </div>
+                </div>
+                <div class="health-item" [class.ok]="selectedDevice.permissions.location"
+                    [class.err]="!selectedDevice.permissions.location">
+                    <i class="fa-solid" [class.fa-circle-check]="selectedDevice.permissions.location"
+                        [class.fa-circle-xmark]="!selectedDevice.permissions.location"></i>
+                    <div>
+                        <div class="hi-label">صلاحية الموقع</div>
+                        <div class="hi-sub">{{ selectedDevice.permissions.location ? 'ممنوحة' : 'مسحوبة' }}</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+}
+
+<!-- Enroll Modal -->
+@if (showEnrollModal) {
+<div class="detail-backdrop" (click)="showEnrollModal = false">
+    <div class="enroll-modal" (click)="$event.stopPropagation()">
+        <div class="panel-header">
+            <h2 class="panel-title">تسجيل جهاز جديد</h2>
+            <button class="close-btn" (click)="showEnrollModal = false"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="panel-body">
+            <div class="enroll-steps">
+                <div class="estep">
+                    <div class="estep-num">1</div>
+                    <div>قم بتنزيل تطبيق Raqeeb على هاتف العمل (Android)</div>
+                </div>
+                <div class="estep">
+                    <div class="estep-num">2</div>
+                    <div>افتح التطبيق وأدخل كود التسجيل أدناه</div>
+                </div>
+                <div class="estep">
+                    <div class="estep-num">3</div>
+                    <div>اتبع التعليمات لمنح الصلاحيات المطلوبة</div>
+                </div>
+                <div class="estep">
+                    <div class="estep-num">4</div>
+                    <div>سيظهر الجهاز هنا تلقائياً خلال دقيقة</div>
+                </div>
+            </div>
+            <div class="enroll-code-box">
+                <div class="ec-label">كود التسجيل</div>
+                <div class="ec-code">RQ-NEW1</div>
+                <div class="ec-note">صالح لمدة 24 ساعة</div>
+            </div>
+        </div>
+    </div>
+</div>
+}

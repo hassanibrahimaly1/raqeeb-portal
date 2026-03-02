@@ -1,0 +1,234 @@
+<div class="calls-page">
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">المكالمات</h1>
+            <p class="page-sub">عرض وتحليل جميع مكالمات الفريق</p>
+        </div>
+    </div>
+
+    <!-- Filters Bar -->
+    <div class="filters-bar">
+        <div class="search-wrap">
+            <i class="fa-solid fa-search"></i>
+            <input class="rq-input" type="text" [(ngModel)]="searchText" placeholder="بحث بالموظف، رقم، أو وسم...">
+        </div>
+
+        <div class="filter-row">
+            <select class="rq-select" [(ngModel)]="filterDirection">
+                <option value="">جميع الاتجاهات</option>
+                <option value="inbound">واردة</option>
+                <option value="outbound">صادرة</option>
+                <option value="missed">فائتة</option>
+            </select>
+
+            <select class="rq-select" [(ngModel)]="filterAiStatus">
+                <option value="">جميع حالات الذكاء</option>
+                <option value="ready">جاهز</option>
+                <option value="pending">قيد المعالجة</option>
+                <option value="failed">فشل</option>
+                <option value="none">غير مسجل</option>
+            </select>
+        </div>
+
+        <div class="count-chip">{{ filtered.length }} مكالمة</div>
+    </div>
+
+    <!-- Calls Table -->
+    <div class="table-card">
+        <table class="rq-table">
+            <thead>
+                <tr>
+                    <th>الموظف</th>
+                    <th>الاتجاه</th>
+                    <th>الرقم</th>
+                    <th>التوقيت</th>
+                    <th>المدة</th>
+                    <th>التسجيل</th>
+                    <th>الذكاء الاصطناعي</th>
+                    <th>الأداء</th>
+                    <th>العلامة</th>
+                    <th>الوسوم</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (call of filtered; track call.id) {
+                <tr (click)="openDetail(call)" class="clickable">
+                    <td>
+                        <div class="agent-cell">
+                            <div class="avatar">{{ call.agent[0] }}</div>
+                            <div>
+                                <div class="agent-name">{{ call.agent }}</div>
+                                <div class="agent-device">{{ call.device }}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="dir-badge" [class]="'dir-' + call.direction">
+                            <i [class]="dirIcon(call.direction)"></i>
+                            {{ dirLabel(call.direction) }}
+                        </span>
+                    </td>
+                    <td class="mono text-sm">{{ call.number }}</td>
+                    <td class="text-muted text-sm">{{ call.time }}</td>
+                    <td class="mono">{{ call.duration }}</td>
+                    <td>
+                        @if (call.recorded) {
+                        <span class="rec-pill rec-yes"><i class="fa-solid fa-microphone"></i> مسجل</span>
+                        } @else {
+                        <span class="rec-pill rec-no"><i class="fa-solid fa-microphone-slash"></i> لا</span>
+                        }
+                    </td>
+                    <td>
+                        <span class="ai-pill" [class]="'ai-' + call.aiStatus">{{ aiStatusLabel(call.aiStatus) }}</span>
+                    </td>
+                    <td>
+                        @if (call.score !== null) {
+                        <span class="score" [class]="scoreClass(call.score)">{{ call.score }}</span>
+                        } @else {
+                        <span class="text-muted">–</span>
+                        }
+                    </td>
+                    <td>
+                        @if (call.flag) {
+                        <span class="flag" [class.flag-danger]="call.flag === 'خطر'"
+                            [class.flag-opp]="call.flag === 'فرصة'">{{ call.flag }}</span>
+                        }
+                    </td>
+                    <td>
+                        <div class="tags">
+                            @for (tag of call.tags.slice(0,2); track tag) {
+                            <span class="tag">{{ tag }}</span>
+                            }
+                            @if (call.tags.length > 2) {
+                            <span class="tag tag-more">+{{ call.tags.length - 2 }}</span>
+                            }
+                        </div>
+                    </td>
+                    <td>
+                        <button class="icon-btn" (click)="openDetail(call); $event.stopPropagation()">
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </button>
+                    </td>
+                </tr>
+                }
+                @empty {
+                <tr>
+                    <td colspan="11" class="empty-row">لا توجد مكالمات تطابق الفلتر</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<!-- Call Detail Panel -->
+@if (selectedCall) {
+<div class="detail-backdrop" (click)="closeDetail()">
+    <div class="detail-panel" (click)="$event.stopPropagation()">
+        <div class="panel-header">
+            <div>
+                <h2 class="panel-title">تفاصيل المكالمة</h2>
+                <p class="panel-sub">{{ selectedCall.agent }} · {{ selectedCall.date }} · {{ selectedCall.time }}</p>
+            </div>
+            <button class="close-btn" (click)="closeDetail()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <div class="panel-body">
+
+            <!-- Meta grid -->
+            <div class="meta-grid">
+                <div class="meta-item">
+                    <div class="meta-label">الرقم</div>
+                    <div class="meta-val mono">{{ selectedCall.number }}</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">الاتجاه</div>
+                    <div class="meta-val">{{ dirLabel(selectedCall.direction) }}</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">المدة</div>
+                    <div class="meta-val mono">{{ selectedCall.duration }}</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">الجهاز</div>
+                    <div class="meta-val">{{ selectedCall.device }}</div>
+                </div>
+            </div>
+
+            @if (selectedCall.recorded && selectedCall.aiStatus === 'ready') {
+            <!-- Audio Player placeholder -->
+            <div class="audio-player">
+                <i class="fa-solid fa-play-circle"></i>
+                <span>تشغيل التسجيل</span>
+                <div class="waveform">
+                    @for (h of [40,65,30,80,55,70,35,90,60,45]; track h) {
+                    <div class="bar" [style.height.px]="h"></div>
+                    }
+                </div>
+                <span class="dur mono">{{ selectedCall.duration }}</span>
+            </div>
+
+            <!-- AI Section -->
+            <div class="section-title">تحليل الذكاء الاصطناعي</div>
+            <div class="ai-scores">
+                <div class="score-block">
+                    <div class="score-num" [class]="scoreClass(selectedCall.score!)">{{ selectedCall.score }}</div>
+                    <div class="score-lbl">الأداء</div>
+                </div>
+                <div class="score-block">
+                    <div class="tone-chip">{{ selectedCall.tone }}</div>
+                    <div class="score-lbl">النبرة</div>
+                </div>
+            </div>
+
+            <!-- Tags -->
+            @if (selectedCall.tags.length) {
+            <div class="section-title">الوسوم التلقائية</div>
+            <div class="tags-row">
+                @for (tag of selectedCall.tags; track tag) {
+                <span class="tag tag-lg">{{ tag }}</span>
+                }
+            </div>
+            }
+
+            <!-- Transcript placeholder -->
+            <div class="section-title">الملخص</div>
+            <div class="summary-placeholder">
+                <p>ناقش الموظف خيارات الخطة مع العميل. أبدى العميل اهتماماً بباقة الأعمال الشهرية وطلب متابعة لاحقة بعد
+                    مراجعة الميزانية.</p>
+            </div>
+
+            <div class="section-title">النص الكامل</div>
+            <div class="transcript">
+                <div class="turn agent-turn"><span class="speaker">الموظف</span><span class="text">السلام عليكم، معك
+                        محمد من شركة ... كيف أقدر أساعدك؟</span></div>
+                <div class="turn customer-turn"><span class="speaker">العميل</span><span class="text">أهلاً، أبي أستفسر
+                        عن أسعار باقات الأعمال.</span></div>
+                <div class="turn agent-turn"><span class="speaker">الموظف</span><span class="text">بالتأكيد، عندنا ثلاث
+                        باقات رئيسية...</span></div>
+            </div>
+            } @else if (!selectedCall.recorded) {
+            <div class="no-ai-note">
+                <i class="fa-solid fa-microphone-slash"></i>
+                <p>هذه المكالمة لم يتم تسجيلها. لا يتوفر تحليل ذكاء اصطناعي.</p>
+            </div>
+            } @else if (selectedCall.aiStatus === 'pending') {
+            <div class="no-ai-note pending">
+                <i class="fa-solid fa-hourglass-half"></i>
+                <p>التحليل قيد المعالجة. يرجى التحقق لاحقاً.</p>
+            </div>
+            } @else {
+            <div class="no-ai-note error">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <p>فشل التحليل. يرجى التواصل مع الدعم الفني.</p>
+            </div>
+            }
+
+        </div>
+    </div>
+</div>
+}

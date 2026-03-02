@@ -1,0 +1,125 @@
+<div class="users-page">
+
+    <!-- Header -->
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">المستخدمون</h1>
+            <p class="page-sub">إدارة أعضاء الفريق والصلاحيات</p>
+        </div>
+        <button class="invite-btn" (click)="showInviteModal = true">
+            <i class="fa-solid fa-user-plus"></i> دعوة مستخدم
+        </button>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-bar">
+        <div class="search-wrap">
+            <i class="fa-solid fa-search"></i>
+            <input class="rq-input" type="text" [(ngModel)]="searchText" placeholder="بحث بالاسم أو البريد...">
+        </div>
+        <div class="seg-group">
+            <button [class.active]="filterRole === ''" (click)="filterRole = ''">الكل</button>
+            <button [class.active]="filterRole === 'owner'" (click)="filterRole = 'owner'">مالك</button>
+            <button [class.active]="filterRole === 'manager'" (click)="filterRole = 'manager'">مدير</button>
+            <button [class.active]="filterRole === 'viewer'" (click)="filterRole = 'viewer'">مشاهد</button>
+        </div>
+        <div class="count-chip">{{ filtered.length }} مستخدم</div>
+    </div>
+
+    <!-- Users Table -->
+    <div class="table-card">
+        <table class="rq-table">
+            <thead>
+                <tr>
+                    <th>المستخدم</th>
+                    <th>الدور</th>
+                    <th>الحالة</th>
+                    <th>آخر دخول</th>
+                    <th>الأجهزة</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (user of filtered; track user.id) {
+                <tr>
+                    <td>
+                        <div class="user-cell">
+                            <div class="avatar" [class]="'av-' + user.role">{{ user.name[0] }}</div>
+                            <div>
+                                <div class="user-name">{{ user.name }}</div>
+                                <div class="user-email">{{ user.email }}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="role-badge" [class]="'role-' + user.role">
+                            <i [class]="roleIcon(user.role)"></i> {{ roleLabel(user.role) }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="status-pill" [class.active]="user.status === 'active'"
+                            [class.inactive]="user.status === 'inactive'">
+                            {{ user.status === 'active' ? 'نشط' : 'غير نشط' }}
+                        </span>
+                    </td>
+                    <td class="text-muted text-sm">{{ user.lastLogin }}</td>
+                    <td class="text-sm">
+                        @if (user.devices > 0) {
+                        <span class="devices-chip"><i class="fa-solid fa-mobile-screen"></i> {{ user.devices }}</span>
+                        } @else {
+                        <span class="text-muted">—</span>
+                        }
+                    </td>
+                    <td>
+                        <button class="icon-btn"><i class="fa-solid fa-ellipsis"></i></button>
+                    </td>
+                </tr>
+                }
+                @empty {
+                <tr>
+                    <td colspan="6" class="empty-row">لا توجد مستخدمون يطابقون البحث</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<!-- Invite Modal -->
+@if (showInviteModal) {
+<div class="modal-backdrop" (click)="showInviteModal = false">
+    <div class="invite-modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h2>دعوة مستخدم جديد</h2>
+            <button class="close-btn" (click)="showInviteModal = false"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="modal-body">
+            <div class="field">
+                <label>البريد الإلكتروني</label>
+                <input class="rq-field" type="email" [(ngModel)]="inviteEmail" placeholder="user@company.jo">
+            </div>
+            <div class="field">
+                <label>الدور</label>
+                <select class="rq-field" [(ngModel)]="inviteRole">
+                    <option value="owner">مالك</option>
+                    <option value="manager">مدير</option>
+                    <option value="viewer">مشاهد</option>
+                </select>
+            </div>
+            <div class="role-hints">
+                <div class="hint"><i class="fa-solid fa-crown"></i> <strong>مالك:</strong> صلاحيات كاملة وإعدادات
+                    الفواتير</div>
+                <div class="hint"><i class="fa-solid fa-user-tie"></i> <strong>مدير:</strong> مراجعة المكالمات والتقارير
+                    والتنبيهات</div>
+                <div class="hint"><i class="fa-solid fa-eye"></i> <strong>مشاهد:</strong> عرض فقط بدون تعديل</div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-outline" (click)="showInviteModal = false">إلغاء</button>
+            <button class="btn-primary" (click)="sendInvite()"><i class="fa-solid fa-paper-plane"></i> إرسال
+                الدعوة</button>
+        </div>
+    </div>
+</div>
+}

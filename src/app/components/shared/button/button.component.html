@@ -1,0 +1,24 @@
+<button [type]="type" [disabled]="disabled || isLoading" [class]="'rq-btn btn-' + variant + ' size-' + size"
+    [class.full-width]="fullWidth" (click)="handleClick($event)">
+    @if (isLoading) {
+    <span class="loader">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" stroke-dasharray="31.4 31.4"
+                stroke-linecap="round">
+                <animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="1s"
+                    repeatCount="indefinite" />
+            </circle>
+        </svg>
+    </span>
+    } @else {
+    @if (icon && iconPos === 'start') {
+    <i [class]="icon"></i>
+    }
+
+    <span class="btn-label">{{ label }}</span>
+
+    @if (icon && iconPos === 'end') {
+    <i [class]="icon"></i>
+    }
+    }
+</button>
